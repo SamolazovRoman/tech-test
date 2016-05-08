@@ -19,7 +19,7 @@ This script do siple work:
  - Add VMs: web, aap1, app2 to known host for ssh connections
  - Run ansible playbook: nginx.yml
 
-**Note: How to get Sitecore MSI installer:**  
+**Manual running:**  
 If vagrand up don't works - something went wrong, in most cases this issues related to networking, to avoid this situation in Vagrant described two networks (one of them DHCP, other in static).
 However, if the vegarnt file doesn't work - run play book manually:
 1) copy content of the res/ folder on ansible node

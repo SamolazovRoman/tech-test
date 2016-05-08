@@ -1,0 +1,56 @@
+---
+- name: Deploy nginx LB
+  hosts: webservers
+  sudo: yes
+  remote_user: vagrant
+  sudo_user: root
+  tasks:
+  - name: install nginx
+    apt: name=nginx state=latest
+  - name: Nginx is running (enable it at boot)
+    service: name=nginx state=started enabled=yes
+  - name: write the nginx default site config file
+    copy: src=default dest=/etc/nginx/sites-available/default
+    notify:
+    - restart nginx
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
+- name: Appliacation servers configuration
+  hosts: appservers
+  sudo: yes
+  remote_user: vagrant
+  sudo_user: root
+  tasks:
+  - name: Download the Go tar
+    get_url: url="https://storage.googleapis.com/golang/go1.6.linux-amd64.tar.gz"
+             dest=/usr/local/src/go1.6.linux-amd64.tar.gz
+  - name: Register Go version
+    command: /usr/local/go/bin/go version
+    ignore_errors: yes
+    register: go_version
+    changed_when: false
+  - name: Extract Go tar
+    unarchive: src=/usr/local/src/go1.6.linux-amd64.tar.gz
+               dest=/usr/local
+               copy=no
+    when: go_version|failed or go_version.stdout != "go version go1.6 linux/amd64"
+  - name: Add tGo bin directory to the PATH variable
+    copy: src=go-bin.sh
+          dest=/etc/profile.d
+  - name: Set GOPATH for all users
+    copy: src=go-path.sh
+          dest=/etc/profile.d
+  - name: Creates App directory
+    file: path=/root/go/bin/hello state=directory owner=www-data group=www-data mode=0775 recurse=yes
+  - name: Download the Hello App
+    get_url: url="https://raw.githubusercontent.com/halberom/goapp/master/goapp.go"
+             validate_certs=no
+             dest=/root/go/bin/hello/hello.go
+             owner=www-data group=www-data mode=0775
+  - name: Run Hello App
+    command: "nohup /usr/local/go/bin/go run /root/go/bin/hello/hello.go &"
+    async: 180
+    poll: 0
+  - name: Open App port
+    firewalld: port=8484/tcp permanent=true state=enabled

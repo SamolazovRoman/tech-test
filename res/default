@@ -1,0 +1,15 @@
+upstream app_hello {
+    least_conn;                 # Use Least Connections strategy
+    server 192.168.10.21:8484;      # Go App Server 1
+    server 192.168.10.22:8484;      # Go App Server 2
+}
+
+server {
+    listen 80;
+    
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_pass http://app_hello/;
+    }
+}

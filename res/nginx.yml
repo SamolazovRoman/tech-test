@@ -50,7 +50,7 @@
              owner=www-data group=www-data mode=0775
   - name: Run Hello App
     command: "nohup /usr/local/go/bin/go run /root/go/bin/hello/hello.go &"
-    async: 180
+    async: 1000
     poll: 0
   - name: Open App port
     firewalld: port=8484/tcp permanent=true state=enabled

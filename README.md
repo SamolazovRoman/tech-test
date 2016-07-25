@@ -1,3 +1,5 @@
+The test: https://1drv.ms/b/s!AoDwBdlpg42dixByG555InRLrXEY
+
 # Load Balancer + 2 application nodes Technical Test
 
 Simplest instruction:
@@ -34,7 +36,6 @@ However, if the vegarnt file doesn't work - run play book manually:
 5) When everything green - run the command: ansible-playbook -i host nginx.yml
 
 ### Helpful links:
-Video how it works: https://youtu.be/2ijLockxe6w
 Vagrant: https://www.vagrantup.com/
 
 > the Task was done on windows mashine which add extra complexcity with permissions, line ending etc.

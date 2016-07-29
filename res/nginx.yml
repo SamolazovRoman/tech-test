@@ -24,6 +24,7 @@
   tasks:
   - name: Download the Go tar
     get_url: url="https://storage.googleapis.com/golang/go1.6.linux-amd64.tar.gz"
+             validate_certs=no
              dest=/usr/local/src/go1.6.linux-amd64.tar.gz
   - name: Register Go version
     command: /usr/local/go/bin/go version
